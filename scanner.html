@@ -55,10 +55,8 @@
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataURL = canvas.toDataURL('image/png');
 
-      // Play shutter sound
       shutter.play();
 
-      // Stop camera
       const stream = video.srcObject;
       const tracks = stream.getTracks();
       tracks.forEach(track => track.stop());
