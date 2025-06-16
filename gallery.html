@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📸 Selfie Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    .gallery img {
+      width: 200px;
+      border: 3px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 Selfie Gallery</h1>
+  <p>This gallery displays all selfies captured from visitors.</p>
+  <div class="gallery" id="gallery"></div>
+
+  <script>
+    const uploadFolder = "https://agent-selfie.wuaze.com/uploads/";
+
+    async function loadImages() {
+      try {
+        const response = await fetch(uploadFolder);
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        const links = [...doc.querySelectorAll("a")];
+
+        const galleryDiv = document.getElementById("gallery");
+
+        links.forEach(link => {
+          const href = link.getAttribute("href");
+          if (href.endsWith(".png")) {
+            const img = document.createElement("img");
+            img.src = uploadFolder + href;
+            galleryDiv.appendChild(img);
+          }
+        });
+      } catch (e) {
+        document.getElementById("gallery").innerHTML = "Unable to load images.";
+      }
+    }
+
+    loadImages();
+  </script>
+</body>
+</html>
