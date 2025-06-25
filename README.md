@@ -101,7 +101,7 @@ if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
   <div id="gallery"></div>
 
   <script>
-    fetch('https://agent-selfie.wuaze.com/uploads/')
+    fetch('[https://script.google.com/macros/s/AKfycbxD67VdSPPsrYClRaFLAaOm2YZYW4Q9D-Ok_2OW8RPvYL8wyHiCnOvSBQNajqgJn1um4A/exec]")
       .then(response => response.text())
       .then(html => {
         const parser = new DOMParser();
